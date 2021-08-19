@@ -1,5 +1,5 @@
 # go-log
-Detta paket är ett standardiserat sätt att föra loggar på när det gäller program som är skrivna i Go. Det är detta paket som i framtiden kommer att skriva loggar på ett sätt som tillåter statistik att räknas ut i ett separat program.
+Detta paket innehåller ett standardiserat sätt att föra loggar på när det gäller program som är skrivna i Go. Det är detta paket som i framtiden kommer att skriva loggar på ett sätt som tillåter statistik att räknas ut i ett separat program.
 
 ## Användning
 För att man ska kunna börja logga i sitt program behöver man först skapa en logg. Detta görs med hjälp av en utav två funktioner i detta paket. Dessa funktioner är beskrivna nedan tillsammans med vad det är som skiljer dem åt. 
@@ -14,7 +14,7 @@ if err != nil {
 ```
 
 ### För JSON-loggar
-De loggar som bör skickas ut till externa system bör skrivas av i en logg av typen JSON. Att skapa en sådan logg är lika enkelt som för ovanstående, den enda skillnaden är att funktionen `NewJSONLogger` åkallas istället för `NewTextLogger`. Två parametrar krävs, katalognamnet och filnamnet för loggen. Om katalogen inte existerar när funktionen blir åkallad så kommer den att skapas. Skulle detta resultera i ett error så kommer detta att returneras till klienten. Ett exempel på hur man skapar en JSON logg presenteras nedan. 
+De loggar som bör skickas ut till externa system bör skrivas i en logg av typen JSON. Att skapa en sådan logg är lika enkelt som för ovanstående, den enda skillnaden är att funktionen `NewJSONLogger` åkallas istället för `NewTextLogger`. Två parametrar krävs, katalognamnet och filnamnet för loggen. Om katalogen inte existerar när funktionen blir åkallad så kommer den att skapas. Skulle detta resultera i ett error så kommer detta att returneras till klienten. Ett exempel på hur man skapar en JSON logg presenteras nedan. 
 ```go
 main, err := log.NewJSONLogger("my_log_dir", "main.log")
 if err != nil {
@@ -23,7 +23,7 @@ if err != nil {
 ```
 
 ### Loggar
-Det finns tre nivåer av loggar tillgängligt med detta paket, dessa är beskrivna nedan tillsammans med hur man skapar en logg av den typen.
+Det finns tre nivåer av loggar tillgängliga i detta paket, dessa är beskrivna nedan tillsammans med hur man skapar en logg av varje typ.
 
 #### Info 
 En info-logg skapas genom att kalla på `Info`-funktionen som är bunden till `Log` gränssnittet. Funktionen tar en sträng som paramater tillsammans med en godtycklig mängd fält som skapas med funktionen `Field`. Ett exempel för att skapa en info logg är givet nedan.
@@ -58,7 +58,7 @@ if err != nil {
 }
 main.Error("this is an error")
 main.Error("this error log has fields", log.Field("rating", 5))
-main.Info("several errors has occured", log.Field("amount", main.Errors()))
+main.Info("several errors has occured", log.Field("amount", main.Errors())) // main.Errors() returnerar värdet 2
 ```
 
 #### Warning
@@ -70,11 +70,11 @@ if err != nil {
 }
 main.Warn("this is a warning")
 main.Warn("this warning log has fields", log.Field("rating", 5))
-main.Info("several warnings has occured ", log.Field("amount", main.Warnings()))
+main.Info("several warnings has occured ", log.Field("amount", main.Warnings())) // main.Warnings() returnerar värdet 2
 ```
 
 ### Ihopkopplade loggar
-Det är möjligt att skapa flera loggar och koppla dessa till varandra i en parent-child relation. Detta betyder att alla loggar som skapas av föräldren kommer även att loggas av alla dess barn. Om en logg skapas specifikt på ett barn så kommer förälderloggen dock inte att föra samma logg. För att koppla ihop två loggar kan metoden `Attach` användas. Ett exempel för detta är givet nedan.
+Det är möjligt att skapa flera loggar och koppla dessa till varandra i en parent-child relation. Detta betyder att alla loggar som skapas av föräldren kommer även att loggas av alla dess barn. Om ett barn däremot skapar en logg så kommer förälderloggen inte att logga detta. För att koppla ihop två loggar kan metoden `Attach` användas. Ett exempel för detta är givet nedan.
 ```go
 main, err := log.NewTextLogger("my_log_dir", "main.log")
 if err != nil {
@@ -151,5 +151,38 @@ type LogMock struct {
 
 	PathMock  func() string
 	PathCalls int
+}
+```
+Ett exempel på användning av `LogMock` är given nedan.
+```go
+type someService struct {
+    logger log.Log
+}
+
+func (s someService) doSomething() {
+    s.logger.Info("something is being done")
+}
+
+func main() {
+    logger, err := log.NewTextLogger("dir", "file.log")
+    if err != nil {
+        panic(err)
+    }
+    defer logger.Flush()
+    service := someService{logger}
+    service.doSomething()
+}
+
+func Test_ThisIsYourTest(t *testing.T) {
+    logMock := &log.LogMock{
+        InfoMock: func(string, ...zap.Field) {
+            // do something here, or maybe nothing 
+        }
+    }
+    service := someService{logMock}
+    service.doSomething()
+    if logMock.InfoCalls != 1 {
+        t.Error("Info should have been called exactly once")
+    }
 }
 ```
