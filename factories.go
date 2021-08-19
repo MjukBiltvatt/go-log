@@ -30,8 +30,10 @@ func NewTextLogger(directory, name string) (Log, error) {
 		return nil, err
 	}
 	return &log{
-		logger:   logger,
-		attached: make([]Log, 0),
+		logger:    logger,
+		attached:  make([]Log, 0),
+		directory: directory,
+		fileName:  name,
 	}, nil
 }
 
@@ -64,8 +66,10 @@ func NewJSONLogger(directory, name string) (Log, error) {
 		return nil, err
 	}
 	return &log{
-		logger:   logger,
-		attached: make([]Log, 0),
+		logger:    logger,
+		attached:  make([]Log, 0),
+		directory: directory,
+		fileName:  name,
 	}, nil
 }
 
