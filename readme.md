@@ -98,7 +98,7 @@ if err != nil {
     handleErr(err)
 }
 
-logFile := main.Path()
+logFile := main.Path() // logFile will have the value of my_log_dir/main.log
 ```
 
 ### Viktigt
