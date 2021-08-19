@@ -123,3 +123,33 @@ defer func() {
     }
 }()
 ```
+
+## Testning
+Det är inte alltid du vill att en logg ska skapas under automatiska tester eller under utveckling. För att motverka detta kan en `LogMock` användas. Denna `struct` implementerar `Log` gränssnittet och kan därför användas som en vanlig logg. Skaparen av `LogMock` värdet har möjlighet att definiera de operationer som bör utföras när en godtycklig metod körs. Det går även att hitta mängden anrop som har skett till en given metod genom värdets fält. Se nedan för definitionen av `LogMock`.
+```go
+type LogMock struct {
+	InfoMock  func(string, ...zap.Field)
+	InfoCalls int
+
+	ErrorMock  func(string, ...zap.Field)
+	ErrorCalls int
+
+	ErrorsMock  func() int
+	ErrorsCalls int
+
+	WarnMock  func(string, ...zap.Field)
+	WarnCalls int
+
+	WarningsMock  func() int
+	WarningsCalls int
+
+	AttachMock  func(Log)
+	AttachCalls int
+
+	FlushMock  func() error
+	FlushCalls int
+
+	PathMock  func() string
+	PathCalls int
+}
+```
