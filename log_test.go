@@ -12,7 +12,7 @@ func Test_LogAttachesChildren(t *testing.T) {
 		logger:   zaptest.NewLogger(t, zaptest.Level(zap.FatalLevel)),
 		attached: make([]Log, 0),
 	}
-	child := &logMock{
+	child := &LogMock{
 		InfoMock: func(s string, f ...zap.Field) {},
 	}
 	parent.Attach(child)
@@ -29,7 +29,7 @@ func Test_InfoForwardsToChildren(t *testing.T) {
 		logger:   zaptest.NewLogger(t, zaptest.Level(zap.FatalLevel)),
 		attached: make([]Log, 0),
 	}
-	child := &logMock{
+	child := &LogMock{
 		InfoMock: func(s string, f ...zap.Field) {},
 	}
 	parent.Attach(child)
@@ -47,7 +47,7 @@ func Test_ErrorForwardsToChildren(t *testing.T) {
 		logger:   zaptest.NewLogger(t, zaptest.Level(zap.FatalLevel)),
 		attached: make([]Log, 0),
 	}
-	child := &logMock{
+	child := &LogMock{
 		ErrorMock: func(s string, f ...zap.Field) {},
 	}
 	parent.Attach(child)
@@ -65,7 +65,7 @@ func Test_WarnForwardsToChildren(t *testing.T) {
 		logger:   zaptest.NewLogger(t, zaptest.Level(zap.FatalLevel)),
 		attached: make([]Log, 0),
 	}
-	child := &logMock{
+	child := &LogMock{
 		WarnMock: func(s string, f ...zap.Field) {},
 	}
 	parent.Attach(child)
@@ -83,7 +83,7 @@ func Test_FlushForwardsToChildren(t *testing.T) {
 		logger:   zaptest.NewLogger(t, zaptest.Level(zap.FatalLevel)),
 		attached: make([]Log, 0),
 	}
-	child := &logMock{
+	child := &LogMock{
 		FlushMock: func() error {
 			return nil
 		},

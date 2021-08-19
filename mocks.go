@@ -2,7 +2,7 @@ package log
 
 import "go.uber.org/zap"
 
-type logMock struct {
+type LogMock struct {
 	InfoMock  func(string, ...zap.Field)
 	InfoCalls int
 
@@ -28,42 +28,42 @@ type logMock struct {
 	PathCalls int
 }
 
-func (mock *logMock) Info(msg string, fields ...zap.Field) {
+func (mock *LogMock) Info(msg string, fields ...zap.Field) {
 	mock.InfoCalls++
 	mock.InfoMock(msg, fields...)
 }
 
-func (mock *logMock) Error(msg string, fields ...zap.Field) {
+func (mock *LogMock) Error(msg string, fields ...zap.Field) {
 	mock.ErrorCalls++
 	mock.ErrorMock(msg, fields...)
 }
 
-func (mock *logMock) Errors() int {
+func (mock *LogMock) Errors() int {
 	mock.ErrorsCalls++
 	return mock.ErrorsMock()
 }
 
-func (mock *logMock) Warn(msg string, fields ...zap.Field) {
+func (mock *LogMock) Warn(msg string, fields ...zap.Field) {
 	mock.WarnCalls++
 	mock.WarnMock(msg, fields...)
 }
 
-func (mock *logMock) Warnings() int {
+func (mock *LogMock) Warnings() int {
 	mock.WarningsCalls++
 	return mock.WarningsMock()
 }
 
-func (mock *logMock) Attach(log Log) {
+func (mock *LogMock) Attach(log Log) {
 	mock.AttachCalls++
 	mock.AttachMock(log)
 }
 
-func (mock *logMock) Flush() error {
+func (mock *LogMock) Flush() error {
 	mock.FlushCalls++
 	return mock.FlushMock()
 }
 
-func (mock *logMock) Path() string {
+func (mock *LogMock) Path() string {
 	mock.PathCalls++
 	return mock.PathMock()
 }
