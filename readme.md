@@ -91,7 +91,7 @@ detailed.Info("this log will only be written to detailed.log, not main.log")
 ```
 
 ### Viktigt
-För att tvinga loggarna att skrivas till fil så bör `Flush` bli åkallat vid slutet av programmets körtid eller när loggen inte längre kommer att användas. När `Flush` körs på en förälderlogg så kallas även metoden på alla loggens barn. Ett exempel av använding är givet nedan.
+För att tvinga loggarna att skrivas till fil så bör `Flush` bli åkallat vid slutet av programmets körtid eller när loggen inte längre kommer att användas. När `Flush` körs på en förälderlogg så kallas även `Flush` på alla loggens barn. Ett exempel av använding är givet nedan.
 ```go
 main, err := log.NewTextLogger("my_log_dir", "main.log")
 if err != nil {
