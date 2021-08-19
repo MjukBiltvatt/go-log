@@ -23,6 +23,9 @@ type logMock struct {
 
 	FlushMock  func() error
 	FlushCalls int
+
+	PathMock  func() string
+	PathCalls int
 }
 
 func (mock *logMock) Info(msg string, fields ...zap.Field) {
@@ -58,4 +61,9 @@ func (mock *logMock) Attach(log Log) {
 func (mock *logMock) Flush() error {
 	mock.FlushCalls++
 	return mock.FlushMock()
+}
+
+func (mock *logMock) Path() string {
+	mock.PathCalls++
+	return mock.PathMock()
 }

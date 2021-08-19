@@ -1,6 +1,10 @@
 package log
 
-import "go.uber.org/zap"
+import (
+	"fmt"
+
+	"go.uber.org/zap"
+)
 
 // Log contains the methods required for each logger, it is left exported
 // so that users of the package can implement mocks as needed.
@@ -31,15 +35,19 @@ type Log interface {
 	// thus forces a log flush to disk. Note that the request is forwarded
 	// to any child loggers attached to the logger.
 	Flush() error
+	// Path returns the file path to the log in which entries are written.
+	Path() string
 }
 
 // log is a concrete implementation of the Log interface which uses an
 // underlying zap.Logger to perform its logging.
 type log struct {
-	logger   *zap.Logger
-	attached []Log
-	errors   int
-	warnings int
+	logger    *zap.Logger
+	attached  []Log
+	errors    int
+	warnings  int
+	directory string
+	fileName  string
 }
 
 func (log *log) Info(msg string, fields ...zap.Field) {
@@ -87,4 +95,8 @@ func (log *log) Flush() error {
 		}
 	}
 	return nil
+}
+
+func (log *log) Path() string {
+	return fmt.Sprintf("%s/%s", log.directory, log.fileName)
 }

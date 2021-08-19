@@ -153,3 +153,16 @@ func Test_WarningsReturnsCorrectAmount(t *testing.T) {
 		)
 	}
 }
+
+func Test_PathReturnsCorrectString(t *testing.T) {
+	logger := &log{
+		directory: "/usr/share/logs",
+		fileName:  "test.log",
+	}
+	if logger.Path() != "/usr/share/logs/test.log" {
+		t.Errorf(
+			"expected Path to return '/usr/share/logs/test.log' but found '%s'",
+			logger.Path(),
+		)
+	}
+}
